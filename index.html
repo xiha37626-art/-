@@ -1,0 +1,238 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#f7f5f1">
+<title>衣橱 · Digital Closet</title><link rel="manifest" href="manifest.webmanifest"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="default">
+<style>
+:root{--bg:#f7f5f1;--card:#fff;--text:#1d1d1f;--muted:#8c8983;--line:#e9e5df;--accent:#1d1d1f;--soft:#efebe5}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",sans-serif}
+button,input,select{font:inherit}button{border:0;background:none;color:inherit}
+.app{max-width:520px;margin:auto;min-height:100vh;padding-bottom:92px}
+.top{padding:24px 20px 12px;display:flex;justify-content:space-between;align-items:center}
+.logo{font-size:24px;font-weight:800;letter-spacing:-1px}.sub{font-size:12px;color:var(--muted);margin-top:3px}
+.iconbtn{width:42px;height:42px;border-radius:50%;background:#fff;border:1px solid var(--line);font-size:20px}
+.page{padding:8px 20px}.hero{background:#1d1d1f;color:white;border-radius:24px;padding:22px;margin:8px 0 20px}
+.hero small{opacity:.65}.hero h1{font-size:28px;line-height:1.2;margin:7px 0 14px}.hero p{margin:0;color:#d2d2d2;font-size:13px}
+.stats{display:flex;gap:10px}.stat{background:#fff;border:1px solid var(--line);border-radius:18px;padding:14px;flex:1}.stat b{display:block;font-size:21px}.stat span{font-size:11px;color:var(--muted)}
+.sectionhead{display:flex;justify-content:space-between;align-items:center;margin:22px 0 12px}.sectionhead h2{font-size:17px;margin:0}.link{font-size:12px;color:var(--muted)}
+.chips{display:flex;gap:8px;overflow:auto;padding-bottom:4px}.chip{white-space:nowrap;background:#fff;border:1px solid var(--line);padding:9px 13px;border-radius:999px;font-size:12px}.chip.active{background:#1d1d1f;color:white;border-color:#1d1d1f}
+.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}.item{background:#fff;border-radius:18px;overflow:hidden;border:1px solid var(--line);position:relative}.photo{aspect-ratio:1/1;background:#eeeae4;display:flex;align-items:center;justify-content:center;overflow:hidden}.photo img{width:100%;height:100%;object-fit:cover}.placeholder{font-size:42px;opacity:.55}.meta{padding:10px 11px 12px}.meta b{font-size:13px}.meta small{display:block;color:var(--muted);font-size:11px;margin-top:4px}
+.fab{position:fixed;bottom:82px;left:50%;transform:translateX(-50%);width:58px;height:58px;border-radius:50%;background:#1d1d1f;color:#fff;font-size:27px;box-shadow:0 10px 30px #0002;z-index:20}
+.nav{position:fixed;bottom:0;left:0;right:0;height:72px;background:#ffffffee;backdrop-filter:blur(15px);border-top:1px solid var(--line);display:flex;justify-content:center;gap:48px;z-index:10}.nav button{font-size:11px;color:#96918a;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px}.nav button.active{color:#1d1d1f;font-weight:700}.nav i{font-style:normal;font-size:20px}
+.empty{text-align:center;padding:55px 20px;color:var(--muted)}.empty .big{font-size:48px;margin-bottom:10px}.primary{background:#1d1d1f;color:#fff;border-radius:14px;padding:13px 18px;font-weight:700;margin-top:16px}
+.modal{position:fixed;inset:0;background:#0008;z-index:30;display:none;align-items:flex-end}.sheet{background:#fff;border-radius:28px 28px 0 0;padding:18px 20px 30px;width:100%;max-width:520px;margin:auto}.grab{width:40px;height:4px;background:#ddd;border-radius:5px;margin:0 auto 20px}.sheet h2{margin:0 0 5px}.sheet p{font-size:12px;color:var(--muted)}.preview{height:210px;border-radius:18px;background:#eeeae4;display:flex;align-items:center;justify-content:center;overflow:hidden;margin:14px 0}.preview img{width:100%;height:100%;object-fit:contain}.select{width:100%;padding:13px;border:1px solid var(--line);border-radius:14px;background:#faf9f7;margin:7px 0 12px}.actions{display:flex;gap:10px}.actions button{flex:1;padding:13px;border-radius:14px}.save{background:#1d1d1f;color:#fff}.cancel{background:var(--soft)}
+.outfit{background:#fff;border:1px solid var(--line);border-radius:22px;padding:15px}.outfitgrid{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}.outfitgrid .photo{border-radius:14px}.outfit h3{margin:8px 0 2px;font-size:15px}.outfit p{margin:0;color:var(--muted);font-size:11px}
+.search{width:100%;padding:13px 15px;border:1px solid var(--line);border-radius:14px;background:#fff;outline:none;margin-bottom:14px}
+.toast{position:fixed;top:20px;left:50%;transform:translateX(-50%);background:#1d1d1f;color:#fff;padding:10px 15px;border-radius:999px;font-size:12px;z-index:50;display:none}
+
+.weather-card{background:#fff;border:1px solid var(--line);border-radius:22px;padding:16px;margin-top:14px}
+.weather-top{display:flex;justify-content:space-between;align-items:flex-start}.weather-city{font-size:13px;font-weight:700}.weather-now{font-size:30px;font-weight:800;line-height:1.05}.weather-desc{font-size:11px;color:var(--muted);margin-top:4px}
+.weather-metrics{display:flex;gap:8px;margin-top:14px}.metric{background:var(--soft);border-radius:12px;padding:9px;flex:1}.metric b{display:block;font-size:14px}.metric span{font-size:10px;color:var(--muted)}
+.timeline{margin-top:16px;overflow-x:auto;padding-bottom:4px}.timeline-inner{min-width:720px;position:relative;height:170px}.chart-svg{width:100%;height:130px;display:block}.hour-row{display:flex;position:absolute;left:0;right:0;bottom:0}.hour{width:60px;text-align:center;font-size:10px;color:var(--muted)}.hour b{display:block;color:var(--text);font-size:11px;margin-bottom:2px}.rainline{font-size:10px;color:#777;margin-top:-2px}
+.weather-reason{background:#f1eee8;border-radius:15px;padding:13px;margin-top:12px;font-size:12px;line-height:1.6}
+.loc-btn{font-size:11px;padding:7px 10px;border:1px solid var(--line);border-radius:999px;background:#fff}
+.recommend-list{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:10px}.recommend{background:#faf9f7;border-radius:14px;padding:8px;text-align:center}.recommend .photo{aspect-ratio:1/1;border-radius:10px}.recommend span{display:block;font-size:10px;margin-top:5px}
+.loading{padding:24px;text-align:center;color:var(--muted);font-size:12px}
+
+.cutout-status{font-size:11px;color:var(--muted);margin:8px 0;text-align:center}.cutout-badge{position:absolute;top:8px;left:8px;background:#1d1d1ddd;color:#fff;border-radius:999px;padding:5px 8px;font-size:10px}.process{background:#1d1d1f;color:#fff;border-radius:14px;padding:12px;width:100%;font-weight:700;margin-top:8px}.process:disabled{opacity:.45}.compare{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px}.compare .preview{height:170px;margin:0}.compare label{font-size:10px;color:var(--muted);display:block;margin:4px 2px}.quality-note{background:#f1eee8;border-radius:12px;padding:9px;font-size:10px;line-height:1.5;color:#6f6a63;margin-top:9px}
+</style>
+</head>
+<body>
+<div class="app">
+<header class="top">
+  <div><div class="logo">衣橱</div><div class="sub">你的私人数字衣橱</div></div>
+  <button class="iconbtn" onclick="showAdd()">＋</button>
+</header>
+<main id="main"></main>
+</div>
+<button class="fab" onclick="showAdd()">＋</button>
+<nav class="nav">
+ <button id="n-home" onclick="go('home')"><i>⌂</i>首页</button>
+ <button id="n-closet" onclick="go('closet')"><i>◫</i>衣橱</button>
+ <button id="n-outfit" onclick="go('outfit')"><i>✦</i>搭配</button>
+</nav>
+
+<div class="modal" id="modal" onclick="if(event.target===this)closeModal()">
+ <div class="sheet">
+  <div class="grab"></div>
+  <h2>加入衣橱</h2><p>拍一张衣服照片，选择分类后保存。</p>
+  <input id="file" type="file" accept="image/*" capture="environment" hidden onchange="previewFile(event)">
+  <button class="primary" style="width:100%;margin:0" onclick="document.getElementById('file').click()">📷 拍照 / 选择照片</button>
+  <div class="preview" id="preview"><span>还没有照片</span></div>
+  <button class="process" id="cutoutBtn" onclick="runCutout()" disabled>✨ 精细抠图</button>
+  <div class="cutout-status" id="cutoutStatus">会尽量保留衣服边缘、袖口、裤脚等细节</div>
+  <label style="font-size:12px;color:#777">分类</label>
+  <select class="select" id="cat"><option>上衣</option><option>裤装</option><option>裙装</option><option>外套</option><option>鞋履</option><option>包包</option><option>配饰</option><option>其他</option></select>
+  <label style="font-size:12px;color:#777">名称（可选）</label>
+  <input class="select" id="name" placeholder="例如：黑色针织衫">
+  <div class="actions"><button class="cancel" onclick="closeModal()">取消</button><button class="save" onclick="saveItem()">保存到衣橱</button></div>
+ </div>
+</div>
+<div class="toast" id="toast"></div>
+
+<script>
+const KEY='my_closet_v1';
+let items=JSON.parse(localStorage.getItem(KEY)||'[]');
+let page='home', filter='全部', previewData=''; let cutoutData=''; let originalData='';
+const cats=['全部','上衣','裤装','裙装','外套','鞋履','包包','配饰','其他'];
+const icons={'上衣':'👕','裤装':'👖','裙装':'👗','外套':'🧥','鞋履':'👟','包包':'👜','配饰':'🕶️','其他':'🧺'};
+
+function save(){localStorage.setItem(KEY,JSON.stringify(items))}
+function go(p){page=p;render()}
+function render(){
+ document.querySelectorAll('.nav button').forEach(x=>x.classList.remove('active'));
+ const n=document.getElementById('n-'+page); if(n)n.classList.add('active');
+ if(page==='home')home(); else if(page==='closet')closet(); else outfit();
+}
+function home(){
+ const recent=items.slice(-4).reverse();
+ document.getElementById('main').innerHTML=`
+ <div class="page">
+  <section class="hero"><small>MY DIGITAL CLOSET</small><h1>今天穿什么？<br>先看看今天的天气。</h1><p>根据当前位置、温度、湿度和降雨情况，从已有衣服里给出建议。</p></section>
+  <div class="stats"><div class="stat"><b>${items.length}</b><span>件衣物</span></div><div class="stat"><b>${new Set(items.map(x=>x.cat)).size}</b><span>分类</span></div><div class="stat"><b>${items.filter(x=>x.worn).length}</b><span>已穿</span></div></div>
+  <div class="sectionhead"><h2>今日天气</h2><button class="loc-btn" onclick="loadWeather()">⌖ 刷新定位</button></div>
+  <div id="weatherBox" class="weather-card"><div class="loading">正在获取当前位置和逐小时天气…</div></div>
+  <div class="sectionhead"><h2>最近加入</h2><button class="link" onclick="go('closet')">查看全部 →</button></div>
+  ${recent.length?`<div class="grid">${recent.map(card).join('')}</div>`:`<div class="empty"><div class="big">👚</div><div>衣橱还是空的</div><button class="primary" onclick="showAdd()">添加第一件衣服</button></div>`}
+ </div>`;
+ loadWeather();
+}
+function closet(){
+ let list=items.filter(x=>filter==='全部'||x.cat===filter);
+ document.getElementById('main').innerHTML=`<div class="page">
+ <div class="sectionhead"><h2>我的衣橱</h2><span class="link">${items.length} 件</span></div>
+ <input class="search" id="search" placeholder="搜索衣服名称…" oninput="searchItems(this.value)">
+ <div class="chips">${cats.map(c=>`<button class="chip ${filter===c?'active':''}" onclick="filter='${c}';render()">${c}</button>`).join('')}</div>
+ <div style="height:14px"></div><div class="grid" id="grid">${list.map(card).join('')}</div>
+ ${!list.length?`<div class="empty"><div class="big">🧺</div>这个分类还没有衣服</div>`:''}
+ </div>`;
+}
+function searchItems(q){
+ let list=items.filter(x=>(filter==='全部'||x.cat===filter)&&(x.name||'').toLowerCase().includes(q.toLowerCase()));
+ document.getElementById('grid').innerHTML=list.map(card).join('')||`<div class="empty" style="grid-column:1/-1">没有找到匹配衣物</div>`;
+}
+function card(x){
+ return `<div class="item" onclick="markWorn('${x.id}')"><div class="photo">${x.img?`<img src="${x.img}">`:`<span class="placeholder">${icons[x.cat]||'👚'}</span>`}</div><div class="meta"><b>${x.name||x.cat}</b><small>${x.cat}${x.worn?' · 穿过 '+x.worn+' 次':''}</small></div></div>`;
+}
+function outfit(){
+ const tops=items.filter(x=>x.cat==='上衣'), bottoms=items.filter(x=>x.cat==='裤装'||x.cat==='裙装'), shoes=items.filter(x=>x.cat==='鞋履');
+ const pick=a=>a[Math.floor(Math.random()*a.length)];
+ const a=pick(tops),b=pick(bottoms),c=pick(shoes);
+ document.getElementById('main').innerHTML=`<div class="page">
+ <div class="sectionhead"><h2>今日搭配</h2><button class="link" onclick="outfit()">换一套 ↻</button></div>
+ ${a||b||c?`<div class="outfit"><div class="outfitgrid">${[a,b,c].filter(Boolean).map(x=>`<div class="photo">${x.img?`<img src="${x.img}">`:`<span class="placeholder">${icons[x.cat]}</span>`}</div>`).join('')}</div><h3>从衣橱里搭一套</h3><p>基础组合 · 上衣 + 下装 + 鞋履</p></div>`:`<div class="empty"><div class="big">✦</div>至少添加上衣、下装或鞋履后，才能开始搭配。</div>`}
+ <div class="sectionhead"><h2>使用方式</h2></div>
+ <div class="stats"><div class="stat"><b>①</b><span>拍照入库</span></div><div class="stat"><b>②</b><span>分类整理</span></div><div class="stat"><b>③</b><span>随机搭配</span></div></div>
+ </div>`;
+}
+
+let weatherData=null;
+function loadWeather(){
+ const box=document.getElementById('weatherBox'); if(!box)return;
+ box.innerHTML='<div class="loading">正在定位并读取天气…</div>';
+ if(!navigator.geolocation){box.innerHTML='<div class="loading">当前浏览器不支持定位，请允许浏览器访问位置信息。</div>';return}
+ navigator.geolocation.getCurrentPosition(
+  pos=>fetchWeather(pos.coords.latitude,pos.coords.longitude),
+  err=>{box.innerHTML='<div class="loading">没有取得定位权限。请在浏览器设置中允许定位，然后点击“刷新定位”。</div>'},
+  {enableHighAccuracy:false,timeout:10000,maximumAge:600000}
+ );
+}
+async function fetchWeather(lat,lon){
+ try{
+  const u=`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&hourly=temperature_2m,relative_humidity_2m,apparent_temperature,precipitation_probability,precipitation,weather_code,wind_speed_10m&forecast_days=1&timezone=auto`;
+  const r=await fetch(u); if(!r.ok)throw new Error('weather');
+  const d=await r.json(); weatherData=d; renderWeather(d);
+ }catch(e){
+  const b=document.getElementById('weatherBox'); if(b)b.innerHTML='<div class="loading">天气读取失败。请检查网络后重新刷新。</div>';
+ }
+}
+function weatherText(code){
+ if(code===0)return '晴'; if([1,2,3].includes(code))return '多云'; if([45,48].includes(code))return '雾';
+ if([51,53,55,56,57].includes(code))return '毛毛雨'; if([61,63,65,66,67,80,81,82].includes(code))return '雨';
+ if([71,73,75,77,85,86].includes(code))return '雪'; if([95,96,99].includes(code))return '雷雨'; return '天气';
+}
+function weatherIcon(code){
+ if(code===0)return '☀️'; if([1,2,3].includes(code))return '⛅'; if([45,48].includes(code))return '🌫️';
+ if([51,53,55,56,57,61,63,65,66,67,80,81,82].includes(code))return '🌧️';
+ if([71,73,75,77,85,86].includes(code))return '❄️'; if([95,96,99].includes(code))return '⛈️'; return '🌤️';
+}
+function renderWeather(d){
+ const h=d.hourly, now=new Date();
+ let idx=h.time.findIndex(t=>new Date(t)>=now); if(idx<0)idx=0;
+ const hours=[];
+ for(let i=idx;i<Math.min(idx+12,h.time.length);i++)hours.push(i);
+ const temp=hours.map(i=>h.temperature_2m[i]), rain=hours.map(i=>h.precipitation_probability[i]||0);
+ const min=Math.min(...temp),max=Math.max(...temp), current=temp[0];
+ const humidity=h.relative_humidity_2m[idx], apparent=h.apparent_temperature[idx];
+ const rainMax=Math.max(...rain);
+ const advice=clothingAdvice(current,apparent,humidity,rainMax,h.weather_code[idx],h.wind_speed_10m[idx]);
+ const svg=makeChart(temp);
+ const labels=hours.map(i=>{let x=new Date(h.time[i]);return `<div class="hour"><b>${String(x.getHours()).padStart(2,'0')}:00</b><span>${Math.round(h.temperature_2m[i])}°</span><div class="rainline">${h.precipitation_probability[i]||0}%</div></div>`}).join('');
+ const place=`${d.timezone||'当前位置'}`;
+ document.getElementById('weatherBox').innerHTML=`
+  <div class="weather-top"><div><div class="weather-city">📍 ${place}</div><div class="weather-desc">${weatherText(h.weather_code[idx])} · 未来约12小时</div></div><div style="text-align:right"><div class="weather-now">${Math.round(current)}°</div><div class="weather-desc">体感 ${Math.round(apparent)}°</div></div></div>
+  <div class="weather-metrics">
+   <div class="metric"><b>${Math.round(min)}°–${Math.round(max)}°</b><span>未来温度</span></div>
+   <div class="metric"><b>${humidity}%</b><span>当前湿度</span></div>
+   <div class="metric"><b>${rainMax}%</b><span>最高降雨概率</span></div>
+  </div>
+  <div class="timeline"><div class="timeline-inner">${svg}<div class="hour-row">${labels}</div></div></div>
+  <div class="weather-reason"><b>今日穿衣建议</b><br>${advice.text}</div>
+  <div class="recommend-list">${advice.items.map(cardMini).join('')}</div>`;
+}
+function makeChart(vals){
+ const W=720,H=130,pad=10,lo=Math.min(...vals)-2,hi=Math.max(...vals)+2;
+ const pts=vals.map((v,i)=>{const x=pad+i*(W-2*pad)/(vals.length-1||1),y=H-pad-(v-lo)/(hi-lo)*(H-2*pad);return [x,y]});
+ const path=pts.map((p,i)=>(i?'L':'M')+p[0].toFixed(1)+','+p[1].toFixed(1)).join(' ');
+ return `<svg class="chart-svg" viewBox="0 0 ${W} ${H}" preserveAspectRatio="none"><line x1="0" y1="${H-10}" x2="${W}" y2="${H-10}" stroke="#e8e4dd"/><path d="${path}" fill="none" stroke="#1d1d1f" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>${pts.map(p=>`<circle cx="${p[0]}" cy="${p[1]}" r="3.5" fill="#fff" stroke="#1d1d1f" stroke-width="2"/>`).join('')}</svg>`;
+}
+function clothingAdvice(temp,feel,hum,rain,code,wind){
+ let text='', cats=[];
+ if(feel<=5){text='体感偏冷，建议采用保暖层叠：贴身层 + 毛衣/卫衣 + 外套；如果降雨明显，再优先选择防水外层。';cats=['外套','上衣','裤装'];}
+ else if(feel<=12){text='体感偏凉，建议长袖上衣配轻薄外套或针织层。早晚温差较大时，外套不要省。';cats=['外套','上衣','裤装'];}
+ else if(feel<=18){text='体感舒适偏凉，长袖上衣或薄针织比较合适；如果早晚出门，可以带一件轻薄外套。';cats=['上衣','外套','裤装'];}
+ else if(feel<=24){text='体感温和，长袖或薄款上衣即可；湿度较高时优先选择透气面料。';cats=['上衣','裤装','裙装'];}
+ else if(feel<=29){text='体感偏暖，建议轻薄、透气的衣物；湿度高时尽量减少厚重叠穿。';cats=['上衣','裙装','裤装'];}
+ else {text='体感偏热，优先选择短袖、短裤或轻薄裙装，减少叠穿；湿度高时更要注意透气。';cats=['上衣','裙装','裤装'];}
+ if(rain>=50){text+=' 今天降雨概率较高，建议携带雨具，并尽量避开不耐水材质的鞋包。';cats=['外套','上衣',...cats.filter(x=>x!=='外套'&&x!=='上衣')];}
+ else if(rain>=25){text+=' 有一定降雨可能，出门时建议带伞。';}
+ if(wind>=25)text+=' 风速偏高，体感可能比实际温度更低，可增加一层。';
+ if(hum>=80)text+=' 湿度较高，建议优先选择吸湿透气的衣物。';
+ const items=[]; for(const c of [...new Set(cats)]){const x=itemsFromCat(c);if(x)items.push(x)}
+ return {text,items};
+}
+function itemsFromCat(c){const a=items.filter(x=>x.cat===c);return a.length?a[Math.floor(Math.random()*a.length)]:null}
+function cardMini(x){return `<div class="recommend"><div class="photo">${x.img?`<img src="${x.img}">`:`<span class="placeholder">${icons[x.cat]||'👚'}</span>`}</div><span>${x.name||x.cat}</span></div>`}
+function showAdd(){document.getElementById('modal').style.display='flex'}
+function closeModal(){document.getElementById('modal').style.display='none';previewData='';originalData='';cutoutData='';document.getElementById('preview').innerHTML='<span>还没有照片</span>';document.getElementById('cutoutBtn').disabled=true;document.getElementById('cutoutBtn').textContent='✨ 精细抠图';document.getElementById('cutoutStatus').textContent='会尽量保留衣服边缘、袖口、裤脚等细节';document.getElementById('file').value=''}
+function previewFile(e){
+ const f=e.target.files[0]; if(!f)return;
+ const r=new FileReader();r.onload=()=>{originalData=r.result;previewData=r.result;cutoutData='';document.getElementById('preview').innerHTML=`<img src="${previewData}">`;document.getElementById('cutoutBtn').disabled=false;document.getElementById('cutoutStatus').textContent='原图已载入。点击“精细抠图”进行 AI 前景分离。'};r.readAsDataURL(f);
+}
+async function runCutout(){
+ if(!originalData)return; const btn=document.getElementById('cutoutBtn'),st=document.getElementById('cutoutStatus');btn.disabled=true;btn.textContent='正在精细抠图…';st.textContent='首次使用需要加载视觉模型，可能需要一点时间；图片会在设备本地处理。';
+ try{
+   const mod=await import('https://esm.sh/@imgly/background-removal@1.7.0');
+   const blob=await mod.removeBackground(originalData,{model:'isnet_fp16'});
+   const url=URL.createObjectURL(blob);cutoutData=url;previewData=url;
+   document.getElementById('preview').innerHTML=`<img src="${url}"><span class="cutout-badge">AI 精细抠图</span>`;
+   st.textContent='抠图完成。已生成透明背景 PNG，边缘细节会尽量保留。';
+ }catch(err){console.error(err);st.textContent='精细抠图加载失败。可以先保存原图，稍后重试；可能是网络或设备性能限制。';previewData=originalData;}
+ btn.disabled=false;btn.textContent='✨ 重新精细抠图';
+}
+function saveItem(){
+ if(!previewData){toast('请先拍照或选择一张照片');return}
+ const cat=document.getElementById('cat').value,name=document.getElementById('name').value.trim();
+ items.push({id:Date.now().toString(),img:previewData,original:originalData,cutout:!!cutoutData,cat,name,worn:0,created:Date.now()});save();closeModal();toast(cutoutData?'已完成精细抠图并加入衣橱':'已加入衣橱');render();
+}
+function markWorn(id){
+ const x=items.find(i=>i.id===id);if(!x)return;
+ x.worn=(x.worn||0)+1;save();toast('已记录穿着');setTimeout(render,250);
+}
+function toast(t){const e=document.getElementById('toast');e.textContent=t;e.style.display='block';clearTimeout(window.tt);window.tt=setTimeout(()=>e.style.display='none',1500)}
+render();
+if('serviceWorker' in navigator){window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js').catch(()=>{}));}
+</script>
+</body></html>

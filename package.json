@@ -1,0 +1,19 @@
+{
+  "name": "yichu-closet",
+  "version": "1.0.0",
+  "private": true,
+  "description": "衣橱：AI精细抠图、数字衣橱、天气与全天穿搭推荐",
+  "scripts": {
+    "build:web": "mkdir -p dist && cp -r www/* dist/",
+    "sync": "npx cap sync android",
+    "open": "npx cap open android",
+    "run": "npx cap run android"
+  },
+  "dependencies": {
+    "@capacitor/core": "^8.0.0",
+    "@capacitor/android": "^8.0.0"
+  },
+  "devDependencies": {
+    "@capacitor/cli": "^8.0.0"
+  }
+}
